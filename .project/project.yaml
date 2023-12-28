@@ -1,8 +1,8 @@
 name: "cool.sacha.house"
 description: ""
 topics: []
-homepage: ""
+homepage: "https://cool.sacha.house"
 source:
-  provider: gitlab
+  provider: github
   namespace: "sachahjkl"
   path: "sachahjkl/cool.sacha.house"

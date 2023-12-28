@@ -15,16 +15,14 @@ type Me struct {
 	DateNaissance   time.Time `json:"dateNaissance"`
 	PlaceOfLiving   string    `json:"placeOfLiving"`
 	Github          string    `json:"github"`
-	Gitlab          string    `json:"gitlab"`
 	Linkedin        string    `json:"linkedin"`
 	Mail            string    `json:"mail"`
 	CurriculumVitae string    `json:"curriculumVitae"`
 	EthAddress      string    `json:"ethAddress"`
 	MoneroAdress    string    `json:"moneroAdress"`
 	Links           struct {
-		Dotfiles    string `json:"dotfiles"`
-		Hayekfr     string `json:"hayekfr"`
-		HayekfrRepo string `json:"hayekfrRepo"`
+		Dotfiles string `json:"dotfiles"`
+		Hayekfr  string `json:"hayekfr"`
 	} `json:"links"`
 }
 

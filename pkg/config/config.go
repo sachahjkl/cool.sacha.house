@@ -9,10 +9,8 @@ type Config struct {
 	Version              string `mapstructure:"VERSION"`
 	CommitSha            string `mapstructure:"COMMIT_SHA"`
 	GithubBearerToken    string `mapstructure:"GITHUB_BEARER_TOKEN"`
-	GitlabBearerToken    string `mapstructure:"GITLAB_BEARER_TOKEN"`
 	ProxycurlBearerToken string `mapstructure:"PROXYCURL_BEARER_TOKEN"`
 	AdminIps             string `mapstructure:"ADMIN_IPS"`
-	GitlabApiEndpoint    string `mapstructure:"GITLAB_API_ENDPOINT"`
 	GithubApiEndpoint    string `mapstructure:"GITHUB_API_ENDPOINT"`
 	ProxycurlApiEndpoint string `mapstructure:"PROXYCURL_API_ENDPOINT"`
 	HygraphApiEndpoint   string `mapstructure:"HYGRAPH_API_ENDPOINT"`
