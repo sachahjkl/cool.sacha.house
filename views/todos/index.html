@@ -1,0 +1,62 @@
+<div
+  id="container"
+  class="max-w-xl bg-[#c3c3c3] m-2 p-2 space-y-2 border-neutral-100 border-2 border-r-neutral-700 border-b-neutral-700 mx-auto"
+>
+  <button
+    hx-post="/logout"
+    class="items-center block w-max active:bg-[rgb(150,150,150)] hover:bg-[rgb(170,170,170)] 
+    active:border-neutral-700 active:border-r-neutral-100 active:border-b-neutral-100
+    px-2 py-1 border-2 border-neutral-100 border-r-neutral-700 border-b-neutral-700 bg-[rgb(204,204,204)] font-bold font-mono"
+  >
+    <img
+      class="inline-block h-6"
+      style="image-rendering: pixelated"
+      src="/assets/icons/exit.gif"
+      alt="coffee"
+    />
+    Logout
+  </button>
+  <h1
+    class="text-xl text-white font-mono font-bold p-1 px-2"
+    style="background: radial-gradient(#010080, #050369)"
+  >
+    Welcome <span class="italic">{{.Username}}</span> 👋
+  </h1>
+
+  <form
+    hx-post="/todos"
+    hx-on::after-request="this.reset()"
+    hx-target="#todos ul"
+    hx-swap="afterbegin"
+    hx-indicator="#todo-add-spinner"
+    class="mb-5"
+  >
+    <div class="flex gap-3 flex-wrap items-center">
+      <input
+        type="text"
+        id="todo-title"
+        name="todo-title"
+        class="block grow-[6] p-2 text-gray-900 border-2 border-sky-500 px-2 py-1 font-mono"
+        placeholder="Your next task..."
+      />
+      <button
+        class="flex items-center gap-2 active:bg-[rgb(150,150,150)] hover:bg-[rgb(170,170,170)] 
+        px-2 py-1 border-2 border-neutral-100 border-r-neutral-700 border-b-neutral-700 
+        active:border-neutral-700 active:border-r-neutral-100 active:border-b-neutral-100
+        bg-[rgb(204,204,204)] font-bold font-mono"
+        type="submit"
+      >
+        <img
+          class="inline-block h-6"
+          style="image-rendering: pixelated"
+          src="/assets/icons/starsg.gif"
+          alt="coffee"
+        />
+        Add Todo
+      </button>
+    </div>
+  </form>
+
+  <!-- this element will get replaced by HTMX when we submit our form -->
+  {{ template "todos/list" . }}
+</div>

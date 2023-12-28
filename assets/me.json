@@ -1,0 +1,20 @@
+{
+    "nom": "froment",
+    "prenom": "sacha",
+    "username": "sachahjkl",
+    "gender": "male",
+    "dateNaissance": "1999-05-24T22:00:00.000Z",
+    "placeOfLiving": "Lyon",
+    "github": "https://github.com/sachahjkl",
+    "gitlab": "https://gitlab.com/sachahjkl",
+    "linkedin": "https://www.linkedin.com/in/sachafroment/",
+    "mail": "sacha@sacha.house",
+    "curriculumVitae": "https://mega.nz/file/bxUgHAKD#63H2N3PoF4s_FP8SK1l3W8qB1Day5fGta1qMqjsIg7c",
+    "ethAddress": "0xDfB091f812ea27Ca58e8f556B252f245660cba87",
+    "moneroAdress": "49ETBPrD54iCKeecWjPt2hfjciSRgptXzJc29Hd8FS97AQHzThdoxE1aE4NigAf8xYDxok1iaaGKD8a6EmUwUgkgTstDaFJ",
+    "links": {
+     "dotfiles": "https://gitlab.com/sachahjkl/dotfiles",
+     "hayekfr": "https://ilone.hayek.fr/",
+     "hayekfrRepo": "https://gitlab.com/bonzybuddy/bonzybuddy.gitlab.io"
+    }
+   }

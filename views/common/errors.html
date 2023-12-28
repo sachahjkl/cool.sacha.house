@@ -1,0 +1,11 @@
+{{if .Errors }}
+<ul class="font-mono font-bold text-red-500 list-inside space-y-2">
+  {{range .Errors}}
+  <li
+    class="font-mono font-bold bg-[#fcfcde] px-1 border-2 border-black text-red-700 space-y-2"
+  >
+    {{.Error}}
+  </li>
+  {{end}}
+</ul>
+{{end}}
