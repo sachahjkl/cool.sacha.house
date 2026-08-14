@@ -31,7 +31,10 @@ jobs:
         run: |
           umask 077
           authfile="$RUNNER_TEMP/skopeo-auth-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
-          trap 'rm -f "$authfile"' EXIT
+          registries_conf="$RUNNER_TEMP/registries-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.conf"
+          trap 'rm -f "$authfile" "$registries_conf"' EXIT
+          : > "$registries_conf"
+          export CONTAINERS_REGISTRIES_CONF="$registries_conf"
           image="$(nix build .#dockerImage --print-out-paths --no-link)"
           printf '%s' "$GHCR_TOKEN" | nix develop -c skopeo login \
             --authfile "$authfile" --username "$GITHUB_ACTOR" --password-stdin ghcr.io
