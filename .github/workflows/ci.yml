@@ -8,11 +8,8 @@ on:
       - "**"
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
-
 jobs:
-  container:
+  check-and-publish:
     runs-on: [self-hosted, nixos]
     permissions:
       contents: read
@@ -21,38 +18,27 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - id: commit
-        run: printf 'short_sha=%s\n' "${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
-      - id: metadata
-        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
-        with:
-          images: ${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch }}
-            type=ref,event=branch,enable=${{ github.ref_name != github.event.repository.default_branch }}
-            type=ref,event=tag
-      - name: Build and push image
+      - name: Check
+        run: nix flake check --print-build-logs
+      - name: Evaluate all systems
+        run: nix flake check --all-systems --no-build
+      - name: Publish image
+        if: github.event_name == 'push'
         env:
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           GHCR_TOKEN: ${{ github.token }}
-          IMAGE_TAGS: ${{ steps.metadata.outputs.tags }}
-          IMAGE_LABELS: ${{ steps.metadata.outputs.labels }}
-          SHORT_SHA: ${{ steps.commit.outputs.short_sha }}
+          IMAGE_NAME: ghcr.io/${{ github.repository }}
         run: |
           umask 077
-          authfile="$RUNNER_TEMP/podman-auth-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          authfile="$RUNNER_TEMP/skopeo-auth-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
           trap 'rm -f "$authfile"' EXIT
-          printf '%s' "$GHCR_TOKEN" | podman login --authfile "$authfile" ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-          podman pull --authfile "$authfile" "$IMAGE_NAME:latest" || true
+          image="$(nix build .#dockerImage --print-out-paths --no-link)"
+          printf '%s' "$GHCR_TOKEN" | nix develop -c skopeo login \
+            --authfile "$authfile" --username "$GITHUB_ACTOR" --password-stdin ghcr.io
 
-          build_args=(--authfile "$authfile" --pull=always --build-arg "version=$SHORT_SHA" --build-arg "commit_sha=$SHORT_SHA")
-          while IFS= read -r tag; do
-            [[ -n "$tag" ]] && build_args+=(--tag "$tag")
-          done <<< "$IMAGE_TAGS"
-          while IFS= read -r label; do
-            [[ -n "$label" ]] && build_args+=(--label "$label")
-          done <<< "$IMAGE_LABELS"
-          podman build "${build_args[@]}" .
-
-          while IFS= read -r tag; do
-            [[ -n "$tag" ]] && podman push --authfile "$authfile" "$tag"
-          done <<< "$IMAGE_TAGS"
+          tag="${GITHUB_REF_NAME//\//-}"
+          if [[ "$GITHUB_REF_TYPE" == branch && "$GITHUB_REF_NAME" == "$GITHUB_DEFAULT_BRANCH" ]]; then
+            tag=latest
+          fi
+          nix develop -c skopeo copy --authfile "$authfile" \
+            "docker-archive:$image" "docker://$IMAGE_NAME:$tag"

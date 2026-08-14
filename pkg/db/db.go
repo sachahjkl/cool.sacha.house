@@ -4,7 +4,7 @@ import (
 	"log"
 	"sachahjkl/htmx_go/pkg/model"
 
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
